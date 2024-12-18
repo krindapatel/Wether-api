@@ -1,0 +1,64 @@
+
+<style>
+    #card {
+    padding: 10px;
+    background-color: red; /* Red background for visibility */
+    color: white; /* White text color for contrast */
+    border-radius: 8px; /* Slightly rounded corners */
+    display: none; /* Hidden by default */
+    margin-top: 20px; /* Adds space between form and card */
+    font-size: 18px; /* Increases font size for readability */
+    text-align: center; /* Centers the text */
+}
+
+</style>
+<form>
+    <input type="text" id="userInput">
+    <input type="submit">
+</form>
+
+<p id="card"></p>
+
+<script>
+    document.querySelector('form').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const weather = async () => {
+        try {
+            let api = '094b1cddc40a67c426c17b4f56de2b4d'; // Your API key
+
+            let userInput = document.getElementById('userInput').value.trim(); // Get user input and remove excess spaces
+            console.log(userInput);
+
+            if (!userInput) {
+                alert("Please enter a city name.");
+                return;
+            }
+
+            // Fetch the weather data from the API
+            let result = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${userInput}&appid=${api}&units=metric`);
+
+            let res = await result.json();
+            console.log(res);
+
+            if (res.cod !== 200) {
+                // If the city is not found or there's an error, display a message
+                alert("City not found. Please try again.");
+                return;
+            }
+
+            let card = document.getElementById('card');
+            card.style.display = 'block'; // Show the weather info card
+
+            // Display the temperature from the API
+            card.innerText = `Temperature in ${res.name}: ${res.main.temp}°C`;
+        } catch (err) {
+            console.log(err);
+            alert("Error fetching weather data. Please try again.");
+        }
+    }
+
+    weather();
+});
+
+</script>
